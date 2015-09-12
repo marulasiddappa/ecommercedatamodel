@@ -1,0 +1,264 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="ECommerceModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Customer">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FirstName" Type="varchar" MaxLength="100" />
+          <Property Name="LastName" Type="varchar" MaxLength="100" />
+          <Property Name="Email" Type="varchar" MaxLength="100" />
+          <Property Name="PhoneNo" Type="varchar" MaxLength="50" />
+          <Property Name="City" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="CustomerDetail">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CustomerID" Type="int" Nullable="false" />
+          <Property Name="MetaColumnID" Type="int" Nullable="false" />
+          <Property Name="FieldValue" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="MetaColumn">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MetaTableID" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="MetaTable">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="500" />
+        </EntityType>
+        <Association Name="FK_CustomerDetail_CustomerDetail">
+          <End Role="Customer" Type="Self.Customer" Multiplicity="1" />
+          <End Role="CustomerDetail" Type="Self.CustomerDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customer">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="CustomerDetail">
+              <PropertyRef Name="CustomerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CustomerDetail_MetaColumn">
+          <End Role="MetaColumn" Type="Self.MetaColumn" Multiplicity="1" />
+          <End Role="CustomerDetail" Type="Self.CustomerDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MetaColumn">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="CustomerDetail">
+              <PropertyRef Name="MetaColumnID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MetaColumn_MetaTable">
+          <End Role="MetaTable" Type="Self.MetaTable" Multiplicity="1" />
+          <End Role="MetaColumn" Type="Self.MetaColumn" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MetaTable">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="MetaColumn">
+              <PropertyRef Name="MetaTableID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ECommerceModelStoreContainer">
+          <EntitySet Name="Customer" EntityType="Self.Customer" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CustomerDetail" EntityType="Self.CustomerDetail" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MetaColumn" EntityType="Self.MetaColumn" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MetaTable" EntityType="Self.MetaTable" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_CustomerDetail_CustomerDetail" Association="Self.FK_CustomerDetail_CustomerDetail">
+            <End Role="Customer" EntitySet="Customer" />
+            <End Role="CustomerDetail" EntitySet="CustomerDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CustomerDetail_MetaColumn" Association="Self.FK_CustomerDetail_MetaColumn">
+            <End Role="MetaColumn" EntitySet="MetaColumn" />
+            <End Role="CustomerDetail" EntitySet="CustomerDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MetaColumn_MetaTable" Association="Self.FK_MetaColumn_MetaTable">
+            <End Role="MetaTable" EntitySet="MetaTable" />
+            <End Role="MetaColumn" EntitySet="MetaColumn" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ECommerceModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="ECommerceEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Customers" EntityType="ECommerceModel.Customer" />
+          <EntitySet Name="CustomerDetails" EntityType="ECommerceModel.CustomerDetail" />
+          <EntitySet Name="MetaColumns" EntityType="ECommerceModel.MetaColumn" />
+          <EntitySet Name="MetaTables" EntityType="ECommerceModel.MetaTable" />
+          <AssociationSet Name="FK_CustomerDetail_CustomerDetail" Association="ECommerceModel.FK_CustomerDetail_CustomerDetail">
+            <End Role="Customer" EntitySet="Customers" />
+            <End Role="CustomerDetail" EntitySet="CustomerDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CustomerDetail_MetaColumn" Association="ECommerceModel.FK_CustomerDetail_MetaColumn">
+            <End Role="MetaColumn" EntitySet="MetaColumns" />
+            <End Role="CustomerDetail" EntitySet="CustomerDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MetaColumn_MetaTable" Association="ECommerceModel.FK_MetaColumn_MetaTable">
+            <End Role="MetaTable" EntitySet="MetaTables" />
+            <End Role="MetaColumn" EntitySet="MetaColumns" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Customer">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FirstName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="LastName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Email" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="PhoneNo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="City" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="CustomerDetails" Relationship="ECommerceModel.FK_CustomerDetail_CustomerDetail" FromRole="Customer" ToRole="CustomerDetail" />
+        </EntityType>
+        <EntityType Name="CustomerDetail">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CustomerID" Type="Int32" Nullable="false" />
+          <Property Name="MetaColumnID" Type="Int32" Nullable="false" />
+          <Property Name="FieldValue" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Customer" Relationship="ECommerceModel.FK_CustomerDetail_CustomerDetail" FromRole="CustomerDetail" ToRole="Customer" />
+          <NavigationProperty Name="MetaColumn" Relationship="ECommerceModel.FK_CustomerDetail_MetaColumn" FromRole="CustomerDetail" ToRole="MetaColumn" />
+        </EntityType>
+        <EntityType Name="MetaColumn">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MetaTableID" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="CustomerDetails" Relationship="ECommerceModel.FK_CustomerDetail_MetaColumn" FromRole="MetaColumn" ToRole="CustomerDetail" />
+          <NavigationProperty Name="MetaTable" Relationship="ECommerceModel.FK_MetaColumn_MetaTable" FromRole="MetaColumn" ToRole="MetaTable" />
+        </EntityType>
+        <EntityType Name="MetaTable">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="MetaColumns" Relationship="ECommerceModel.FK_MetaColumn_MetaTable" FromRole="MetaTable" ToRole="MetaColumn" />
+        </EntityType>
+        <Association Name="FK_CustomerDetail_CustomerDetail">
+          <End Type="ECommerceModel.Customer" Role="Customer" Multiplicity="1" />
+          <End Type="ECommerceModel.CustomerDetail" Role="CustomerDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customer">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="CustomerDetail">
+              <PropertyRef Name="CustomerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CustomerDetail_MetaColumn">
+          <End Type="ECommerceModel.MetaColumn" Role="MetaColumn" Multiplicity="1" />
+          <End Type="ECommerceModel.CustomerDetail" Role="CustomerDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MetaColumn">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="CustomerDetail">
+              <PropertyRef Name="MetaColumnID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MetaColumn_MetaTable">
+          <End Type="ECommerceModel.MetaTable" Role="MetaTable" Multiplicity="1" />
+          <End Type="ECommerceModel.MetaColumn" Role="MetaColumn" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MetaTable">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="MetaColumn">
+              <PropertyRef Name="MetaTableID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ECommerceModelStoreContainer" CdmEntityContainer="ECommerceEntities">
+          <EntitySetMapping Name="Customers">
+            <EntityTypeMapping TypeName="ECommerceModel.Customer">
+              <MappingFragment StoreEntitySet="Customer">
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="PhoneNo" ColumnName="PhoneNo" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CustomerDetails">
+            <EntityTypeMapping TypeName="ECommerceModel.CustomerDetail">
+              <MappingFragment StoreEntitySet="CustomerDetail">
+                <ScalarProperty Name="FieldValue" ColumnName="FieldValue" />
+                <ScalarProperty Name="MetaColumnID" ColumnName="MetaColumnID" />
+                <ScalarProperty Name="CustomerID" ColumnName="CustomerID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MetaColumns">
+            <EntityTypeMapping TypeName="ECommerceModel.MetaColumn">
+              <MappingFragment StoreEntitySet="MetaColumn">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="MetaTableID" ColumnName="MetaTableID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MetaTables">
+            <EntityTypeMapping TypeName="ECommerceModel.MetaTable">
+              <MappingFragment StoreEntitySet="MetaTable">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
