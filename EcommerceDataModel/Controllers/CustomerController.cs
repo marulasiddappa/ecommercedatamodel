@@ -13,13 +13,14 @@ using System.Data.SqlClient;
 
 namespace EcommerceDataModel.Controllers
 {
+    [RoutePrefix("api/customer")]
     public class CustomerController : ApiController
     {
         private ECommerceEntities db = new ECommerceEntities();
 
-        // GET api/Customer/5
+        // GET api/Customer/siddu (search customers by name, email, phone, city)
         [ResponseType(typeof(List<CustomerModel>))]
-        [Route("api/customer/{query}")]
+        [Route("{query}")]
         public IHttpActionResult GetCustomer(string query)
         {
             string q = "select * from Customer c where Contains((FirstName,LastName,Email,PhoneNo,City), @query)";
@@ -27,8 +28,9 @@ namespace EcommerceDataModel.Controllers
             return Ok(customers);
         }
 
+        // GET api/Customer/1 (search customers by id)
         [ResponseType(typeof(CustmerViewModel))]
-        [Route("api/customer/{id:int}")]
+        [Route("{id:int}")]
         public IHttpActionResult GetCustomer(int id)
         {
             var model = GetCustomerModel(id);
@@ -37,8 +39,9 @@ namespace EcommerceDataModel.Controllers
             return Ok(model);
         }
 
+        // GET api/Customer/1/specificinfo
         [ResponseType(typeof(CustmerViewModel))]
-        [Route("api/customer/{id}/{query}")]
+        [Route("{id}/{query}")]
         public IHttpActionResult GetCustomer(int id, string query)
         {
             var model = GetCustomerModel(id, query);
@@ -55,9 +58,6 @@ namespace EcommerceDataModel.Controllers
             {
                 return null;
             }
-            var customerDetails = (db.CustomerDetails
-                .Where(cd => cd.CustomerID == id && (string.IsNullOrEmpty(filter) || cd.MetaColumn.MetaTable.Name == filter))
-                .Select(cd => cd));
 
             model.Customer = new CustomerModel
             {
@@ -68,18 +68,16 @@ namespace EcommerceDataModel.Controllers
                 LastName = c.LastName,
                 PhoneNo = c.PhoneNo
             };
-
-            foreach (var d in customerDetails)
-            {
-                model.Detail.Add(new CustomerCustomData
+            model.Detail = (db.CustomerDetails
+                .Where(cd => cd.CustomerID == id && (string.IsNullOrEmpty(filter) || cd.MetaColumn.MetaTable.Name == filter))
+                .Select(cd => new CustomerCustomData
                 {
-                    FieldName = d.MetaColumn.Name,
-                    FieldValue = d.FieldValue,
-                    TableName = d.MetaColumn.MetaTable.Name,
-                    FieldID = d.MetaColumnID,
-                    TableID = d.MetaColumn.MetaTableID
-                });
-            }
+                    FieldName = cd.MetaColumn.Name,
+                    FieldValue = cd.FieldValue,
+                    TableName = cd.MetaColumn.MetaTable.Name,
+                    FieldID = cd.MetaColumnID,
+                    TableID = cd.MetaColumn.MetaTableID
+                }).ToList());
             return model;
         }
 
